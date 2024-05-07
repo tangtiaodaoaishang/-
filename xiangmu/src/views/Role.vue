@@ -9,7 +9,7 @@
     <el-button  type="warning" @click="reset">重置</el-button>
   </div>
   <div style="margin:10px 0">
-    <el-button type="primary" @click="handleAdd">新增<i class="el-icon-circle-plus"></i></el-button>
+    <el-button type="primary" @click="handleAdd" v-if="user.role==='ROLE_ADMIN'">新增<i class="el-icon-circle-plus"></i></el-button>
     <el-popconfirm
         class="ml-5"
         confirm-button-text='确定?'
@@ -20,7 +20,7 @@
         @confirm="delBatch"
     >
       <!--slot="reference" reference触发Popconfirm(气泡框)显示的HTML 元素-->
-      <el-button type="danger" slot="reference" class="mr-5">批量删除<i class="el-icon-remove"></i></el-button>
+      <el-button type="danger" slot="reference" class="mr-5" v-if="user.role==='ROLE_ADMIN'">批量删除<i class="el-icon-remove"></i></el-button>
     </el-popconfirm>
 
   </div>
@@ -33,8 +33,8 @@
     <el-table-column prop="description" label="描述" ></el-table-column>
     <el-table-column label="操作" width="280">
       <template slot-scope="scope">
-        <el-button type="info" @click="selectMenu(scope.row)">分配菜单<i class="el-icon-menu"></i></el-button>
-        <el-button type="warning" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit"></i> </el-button>
+        <el-button type="info" @click="selectMenu(scope.row)" v-if="user.role==='ROLE_ADMIN'">分配菜单<i class="el-icon-menu"></i></el-button>
+        <el-button type="warning" @click="handleEdit(scope.row)" v-if="user.role==='ROLE_ADMIN'">编辑<i class="el-icon-edit"></i> </el-button>
 
         <el-popconfirm
             class="ml-5"
@@ -45,7 +45,7 @@
             title="您确定删除吗?"
             @confirm="handleDelete(scope.row.id)"
         >
-          <el-button type="danger" slot="reference">删除<i class="el-icon-remove"></i></el-button>
+          <el-button type="danger" slot="reference" v-if="user.role==='ROLE_ADMIN'">删除<i class="el-icon-remove"></i></el-button>
         </el-popconfirm>
 
 
@@ -120,6 +120,7 @@ export default {
       multipleSelection: [], //存储多选框类型的表格数据
       headBg: 'headBg',
       menuData: [],
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
       props:{
         label: 'name',
       },
@@ -221,6 +222,8 @@ export default {
       this.pageNum = pageNum
       this.load()
     },
+
+    //生成子菜单的前端方法
     selectMenu(role) {
       this.menuDialogVis = true
       this.roleId = role.id
@@ -236,6 +239,7 @@ export default {
         //先渲染弹窗的元素
         this.menuDialogVis=true
         this.checks=res.data
+        //实现菜单和子菜单的勾选状态(默认全部勾选)
         this.request.get("/menu/ids").then(r=>{
             const ids=r.data
             ids.forEach(id=>{
@@ -249,6 +253,7 @@ export default {
 
       })
     },
+    //生成子菜单的前端方法
     saveRoleMenu() {
       this.request.post("/role/roleMenu/"+this.roleId,this.$refs.tree.getCheckedKeys()).then(res => {
          if(res.code=="200"){

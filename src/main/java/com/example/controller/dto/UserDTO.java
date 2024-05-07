@@ -17,6 +17,9 @@ public class UserDTO {
     private String token;
     private String role;
     private List<Menu> menus;
-
+    //验证码
+    private String code;
+    //手机号
+    private String phone;
 
 }

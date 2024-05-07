@@ -4,8 +4,7 @@
   <video-player class="video-player vjs-custom-skin"
                 ref="videoPlayer"
                 :playsinline="true"
-                :options="playerOptions"
-  >
+                :options="playerOptions">
 
   </video-player>
 </div>

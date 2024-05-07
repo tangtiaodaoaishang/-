@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/role")
 public class RoleController {
-    
+
 @Resource
 private IRoleService roleService;
 
@@ -62,7 +62,8 @@ public Result findPage(@RequestParam String name,
         QueryWrapper<Role> objectQueryWrapper = new QueryWrapper<>();
         objectQueryWrapper.like("name",name);
         objectQueryWrapper.orderByDesc("id");
-        return Result.success(roleService.page(new Page<>(pageNum, pageSize),objectQueryWrapper));
+        Page<Role> page = roleService.page(new Page<>(pageNum, pageSize), objectQueryWrapper);
+        return Result.success(page);
 
         }
         //绑定角色和菜单的关系

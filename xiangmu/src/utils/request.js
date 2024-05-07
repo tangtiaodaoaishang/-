@@ -2,7 +2,7 @@ import axios from 'axios'
 import ElementUI from 'element-ui';
 
 const request = axios.create({
-    baseURL: 'http://localhost:8082',  // 注意！！ 这里是全局统一加上了 '/api' 前缀，也就是说所有接口都会加上'/api'前缀在，页面里面写接口的时候就不要加 '/api'了，否则会出现2个'/api'，类似 '/api/api/user'这样的报错，切记！！！
+    baseURL: 'http://localhost:8082',  //注意！！这里是全局统一加上了 '/api' 前缀，也就是说所有后端接口请求路径都会加上该baseURL前缀，页面里面写接口的时候就不要加 '/api'了，否则会出现2个'/api'，类似 '/api/api/user'这样的报错，切记！！！
     timeout: 30000   //设置超时时间,如果超出该时间,则页面不会显示后端请求的数据(单位毫秒)
 })
 

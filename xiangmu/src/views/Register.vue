@@ -49,7 +49,7 @@ export default {
   },
   methods:{
     register(){
-      //登录校验
+      //注册校验
       this.$refs['userForm'].validate((valid) => {
         if (valid) { //表单校验合法
           if(this.user.password!=this.user.confirmPassword){

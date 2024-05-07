@@ -11,7 +11,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author baomidou
@@ -46,6 +46,7 @@ public class Course implements Serializable {
       //标识该字段不存在数据库中,不然会报错
       @TableField(exist = false)
       private String teacher;
+
 
 
 }

@@ -42,6 +42,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User>  implements IU
     @Resource
     private UserMapper u;
 
+    //根据用户名查询登陆时的手机号是否与数据库存储手机号一致(前提:用户名不一样)
+    public boolean findPhone(String username,String phone){
+        QueryWrapper<User> q=new QueryWrapper<>();
+        q.eq("username",username);
+        User user = u.selectOne(q);
+        if(user==null){
+            return false;
+        }
+        if(user.getPhone().equals(phone)){
+            return true;
+        }
+        return false;
+    }
+
     public boolean saveUser(User u) {
         if (u.getId() == null) {
             return save(u);
@@ -89,6 +103,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User>  implements IU
           return  u.findPage(page,username,email,address);
 
     }
+
+
 
     private User getUserInfo(UserDTO u) {
         QueryWrapper<User> q = new QueryWrapper<>();
@@ -141,7 +157,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User>  implements IU
         return roleMenus;
     }
 
-    }
+}
 
 
 

@@ -6,7 +6,7 @@
       <el-button type="warning" @click="reset">重置</el-button>
     </div>
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="handleAdd" v-if="user.role === 'ROLE_ADMIN'">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
+      <el-button type="primary" @click="handleAdd" v-if="user.role === 'ROLE_ADMIN'">新增<i class="el-icon-circle-plus-outline"></i></el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='确定'
@@ -36,7 +36,7 @@
       </el-table-column>
       <el-table-column label="操作" width="280" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" @click="selectCourse(scope.row.id)">选课</el-button>
+          <el-button type="primary" @click="selectCourse(scope.row.id)" v-if="user.role==='ROLE_STUDENT'">选课</el-button>
           <el-button type="success" @click="handleEdit(scope.row)" v-if="user.role === 'ROLE_ADMIN'">编辑 <i class="el-icon-edit"></i></el-button>
           <el-popconfirm
               class="ml-5"

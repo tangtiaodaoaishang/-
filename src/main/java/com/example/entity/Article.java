@@ -8,7 +8,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author baomidou
@@ -16,7 +16,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-  @ApiModel(value = "Article对象", description = "")
+@ApiModel(value = "Article对象", description = "")
 public class Article implements Serializable {
 
     private static final long serialVersionUID = 1L;

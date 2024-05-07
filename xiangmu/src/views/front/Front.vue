@@ -6,7 +6,7 @@
        <div width="60px">
        <img src="../../assets/edg.png" alt="" style="width: 50px;position: relative;top:5px;right: 0">
        </div>
-       <div style="flex: 1;margin-left: 10px" >欢迎来到xxx系统</div>
+       <div style="flex: 1;margin-left: 10px" >欢迎来到前台学生系统</div>
      </div>
      <div style="flex:1">
 <!--导航菜单-->
@@ -14,20 +14,14 @@
          <el-menu-item index="/front/home">主页</el-menu-item>
          <el-menu-item index="/front/video">视频播放</el-menu-item>
          <el-menu-item index="/front/article">文章列表</el-menu-item>
+         <el-menu-item index="/front/dengji">登记</el-menu-item>
          <el-submenu index="2">
            <template slot="title">总体</template>
-           <el-menu-item index="2-2">选项2</el-menu-item>
+           <el-menu-item index="">选项2</el-menu-item>
            <el-menu-item index="2-3">选项3</el-menu-item>
            <el-menu-item index="/front/shop">用户详情</el-menu-item>
-           <el-submenu index="2-4">
-             <template slot="title">选项4</template>
-             <el-menu-item index="2-4-1">选项1</el-menu-item>
-             <el-menu-item index="2-4-2">选项2</el-menu-item>
-             <el-menu-item index="2-4-3">选项3</el-menu-item>
-           </el-submenu>
          </el-submenu>
-         <el-menu-item index="3" disabled>消息中心</el-menu-item>
-         <el-menu-item index="4">订单管理</el-menu-item>
+
        </el-menu>
      </div>
      <div style="width: 300px">

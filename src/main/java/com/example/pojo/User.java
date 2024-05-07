@@ -34,9 +34,15 @@ public class User {
 //   private String avatarUrl;
 @ApiModelProperty("角色")
     private String role;
+    //老师课程信息属性
     @TableField(exist = false)
    private List<Course> courses;
+    //学生课程信息属性
     @TableField(exist = false)
     private List<Course> stuCourses;
+    //学生信息属性
+    @TableField(exist = false)
+    private List<User> stus;
+
 
 }

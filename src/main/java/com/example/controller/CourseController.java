@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/course")
         public class CourseController {
-    
+
 @Resource
 private ICourseService courseService;
 @Resource
@@ -37,8 +37,7 @@ private UserServiceImpl u;
 //新增和修改操作
 @PostMapping("insert")
 public Result save(@RequestBody Course course){
-
-        return Result.success(courseService.saveOrUpdate(course));
+    return Result.success(courseService.saveOrUpdate(course));
         }
     @PostMapping("/studentCourse/{courseId}/{studentId}")
     public Result studentCourse(@PathVariable Integer courseId,@PathVariable Integer studentId){

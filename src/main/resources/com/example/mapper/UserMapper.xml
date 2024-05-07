@@ -37,17 +37,22 @@ update sys_user
         <result column="phone" property="phone"/>
         <result column="create_time" property="createTime"/>
         <result column="role" property="role"/>
+
        <collection property="courses" javaType="java.util.List" ofType="com.example.entity.Course">
            <result column="teacherCourseName" property="name"/>
            <result column="teacherScore" property="score"/>
+           <result column="teacherTimes" property="times"></result>
        </collection>
         <collection property="stuCourses" javaType="java.util.List" ofType="com.example.entity.Course">
             <result column="stuCourseName" property="name"/>
             <result column="stuScore" property="score"/>
+            <result column="stuTimes" property="times"></result>
         </collection>
+
     </resultMap>
+<!--通过两表连接student_course表,查询sys_user和course的共同数据,其中条件为用户的id等于教该课程的老师id-->
     <select id="findPage" resultMap="pageUser">
-        select sys_user.*,c.name as stuCourseName,c1.name as teacherCourseName,c1.score as teacherScore,c.score as stuScore from sys_user
+        select sys_user.*,c.name as stuCourseName,c1.name as teacherCourseName,c1.score as teacherScore,c.score as stuScore,c.times as stuTimes,c1.times as teacherTimes from sys_user
         left join student_course
         on sys_user.id=student_course.student_id
         left join course c
@@ -66,5 +71,9 @@ update sys_user
             </if>
         </where>
     </select>
+
+
+
+
 
 </mapper>

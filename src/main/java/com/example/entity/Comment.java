@@ -14,7 +14,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author baomidou
@@ -22,7 +22,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-  @TableName("t_comment")
+@TableName("t_comment")
 @ApiModel(value = "Comment对象", description = "")
 public class Comment implements Serializable {
 

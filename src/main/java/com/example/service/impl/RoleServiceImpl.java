@@ -32,6 +32,7 @@ private RoleMenuMapper r;
   private IMenuService i;
     @Transactional //事务,保证所有任务都能执行到
     @Override
+    //生成子菜单的方法
     public void setRoleMenu(Integer roleId, List<Integer> menuIds) {
 /*      QueryWrapper<RoleMenu> q=new QueryWrapper<>();
         q.eq("role_id",roleId);
@@ -40,13 +41,15 @@ private RoleMenuMapper r;
         //先删除当前角色id所有的绑定关系
          r.deleteByRoleId(roleId);
 
-
+         //前端传过来的菜单id数组
         List<Integer> menuIdsCopy= CollUtil.newArrayList(menuIds);
         //再把前端传过来的菜单id数组绑定到当前这个角色id上去
         for(Integer menuId:menuIds){
+            //查询数据库中已有的菜单信息
             Menu byId = i.getById(menuId);
+            //如果数据库中的菜单的父id不为空和前端传过来的菜单id没有该数据库菜单的父级id
             if(byId.getPid()!=null&&!menuIdsCopy.contains(byId.getPid())){ //是二级菜单并且传过来的menuIds数组里面没有它的父级菜单id
-                //那么就要补上父级菜单的id
+                //那么就要补上父级菜单的id到数据库中的菜单
                 RoleMenu menu = new RoleMenu();
                 menu.setRoleId(roleId);
                 menu.setMenuId(byId.getPid());

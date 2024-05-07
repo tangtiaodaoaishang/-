@@ -6,6 +6,8 @@ import com.example.common.Result;
 import com.example.controller.dto.UserDTO;
 import com.example.pojo.User;
 
+import java.util.List;
+
 public interface IUserService extends IService<User> {
    //登录方法
    UserDTO login(UserDTO u);
@@ -16,4 +18,6 @@ public interface IUserService extends IService<User> {
 
 
     Page<User> findPage(Page<User> tPage, String username, String email, String address);
+
+
 }

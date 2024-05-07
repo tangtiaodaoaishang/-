@@ -8,5 +8,7 @@ public interface Constants {
     String CODE_600="600";  //业务异常
     String DICT_TYPE_ICON="icon";
     String FILES_KEY="FILES_FRONT_ALL";
+    String REDIS_KEY1="login:code";
+    Long REDIS_TIME1=60L;
 
 }

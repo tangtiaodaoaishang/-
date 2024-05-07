@@ -8,13 +8,12 @@
   </el-carousel>
 </div>
   <div style="margin: 10px 0">
-    <el-row :gutter="13">
-      <el-col :span="6" v-for="item in files" :key="item.id" style="margin-bottom: 10px">
+    <el-row>
+      <el-col  v-for="item in files" :key="item.id" style="margin-bottom: 10px">
         <el-card>
-        <img :src="item.url" alt="" style="width: 100%;">
+        <img :src="item.url" alt="" style="width: 50%;">
         <div style="padding: 10px 0">
-          <span style="color: #FC466B;padding: 10px 0">{{item.name}}</span>
-          <div><el-button type="primary" style="margin: 10px 0">购买</el-button></div>
+          <span style="color: #FC466B;padding: 10px 0;margin-left: 30px;">{{item.name}}</span>
         </div>
       </el-card>
       </el-col>
@@ -30,13 +29,13 @@ export default {
     return{
       imgs:[
         {
-          url:require("../../assets/1.png")
+          url:require("../../assets/4.jpg")
         },
         {
-          url:require("../../assets/2.png")
+          url:require("../../assets/5.jpg")
         },
         {
-          url:require("../../assets/3.png")
+          url:require("../../assets/6.jpg")
         }
 
       ],

@@ -2,14 +2,14 @@
 <div>
 
   <div style="margin: 10px 0">
-    <el-input style="width: 200px;" placeholder="请输入名称" suffix-icon="el-icon-search" v-model="username"></el-input>
+    <el-input style="width: 200px;" placeholder="请输入用户名" suffix-icon="el-icon-search" v-model="username"></el-input>
     <el-input style="width: 200px;" placeholder="请输入邮箱" suffix-icon="el-icon-message" class="ml-5" v-model="email"></el-input>
     <el-input style="width: 200px;" placeholder="请输入地址" suffix-icon="el-icon-position" class="ml-5" v-model="address"></el-input>
     <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
     <el-button  type="warning" @click="reset">重置</el-button>
   </div>
   <div style="margin:10px 0">
-    <el-button type="primary" @click="handleAdd">新增<i class="el-icon-circle-plus"></i></el-button>
+    <el-button type="primary" @click="handleAdd" v-if="user.role==='ROLE_ADMIN'">新增<i class="el-icon-circle-plus"></i></el-button>
     <el-popconfirm
         class="ml-5"
         confirm-button-text='确定?'
@@ -20,7 +20,7 @@
         @confirm="delBatch"
     >
       <!--slot="reference" reference触发Popconfirm(气泡框)显示的HTML 元素-->
-      <el-button type="danger" slot="reference" class="mr-5">批量删除<i class="el-icon-remove"></i></el-button>
+      <el-button type="danger" slot="reference" class="mr-5" v-if="user.role==='ROLE_ADMIN'">批量删除<i class="el-icon-remove"></i></el-button>
     </el-popconfirm>
 
 
@@ -45,11 +45,11 @@
     <el-table-column prop="phone" label="电话"></el-table-column>
     <el-table-column prop="address" label="地址"></el-table-column>
 
-    <el-table-column label="操作" width="500">
+    <el-table-column label="操作" width="700">
       <template slot-scope="scope">
-        <el-button type="primary" @click="lookCourse(scope.row.courses)" v-if="scope.row.role=='ROLE_TEACHER'">查看教授课程<i class="el-icon-document"></i> </el-button>
-        <el-button type="info" @click="lookStuCourse(scope.row.stuCourses)" v-if="scope.row.role=='ROLE_STUDENT'">查看已选课程<i class="el-icon-document"></i> </el-button>
-        <el-button type="warning" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit"></i> </el-button>
+        <el-button type="primary" @click="lookCourse(scope.row.courses)" v-if="scope.row.role==='ROLE_TEACHER'">查看课程信息<i class="el-icon-document"></i> </el-button>
+        <el-button type="info" @click="lookStuCourse(scope.row.stuCourses)" v-if="scope.row.role==='ROLE_STUDENT'">查看课程信息<i class="el-icon-document"></i> </el-button>
+        <el-button type="warning" @click="handleEdit(scope.row)"  v-if="user.role==='ROLE_ADMIN'">编辑<i class="el-icon-edit"></i> </el-button>
 
         <el-popconfirm
             class="ml-5"
@@ -60,7 +60,7 @@
             title="您确定删除吗?"
             @confirm="handleDelete(scope.row.id)"
         >
-          <el-button type="danger" slot="reference">删除<i class="el-icon-remove"></i></el-button>
+          <el-button type="danger" slot="reference" v-if="user.role=='ROLE_ADMIN'">删除<i class="el-icon-remove"></i></el-button>
         </el-popconfirm>
 
 
@@ -74,7 +74,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pageNum"
-        :page-sizes="[2, 5, 10, 20]"
+        :page-sizes="[2, 5, 30, 50]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
@@ -116,6 +116,7 @@
     <el-table :data="courses" border stripe>
       <el-table-column prop="name" label="课程名称"></el-table-column>
       <el-table-column prop="score" label="学分"></el-table-column>
+      <el-table-column prop="times" label="学时"></el-table-column>
     </el-table>
   </el-dialog>
   <!--对话框-->
@@ -123,8 +124,10 @@
     <el-table :data="stuCourses" border stripe>
       <el-table-column prop="name" label="课程名称"></el-table-column>
       <el-table-column prop="score" label="学分"></el-table-column>
+      <el-table-column prop="times" label="学时"></el-table-column>
     </el-table>
   </el-dialog>
+
 </div>
 </template>
 
@@ -136,8 +139,8 @@ export default {
     return{
       tableData: [],
       total:0,
-      pageNum:1,
-      pageSize:10, //默认的每页显示条数
+      pageNum:1, //从第几页开始
+      pageSize:20, //默认的每页显示条数
       username:'',
       email:'',
       address:'',
@@ -150,8 +153,11 @@ export default {
       roles:[],
       courses:[],
       stuCourses:[],
+      stuTeacher:[],
       vis:false,
-      StuVis:false
+      StuVis:false,
+      StuCVis:false,
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
     }
   },
   created() {

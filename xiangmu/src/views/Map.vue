@@ -4,6 +4,8 @@
 </div>
 </template>
 
+<script src="//webapi.amap.com/maps?v=1.4.15&key=53354ecb4ac72abb49ee7b163fcf1b82"></script>
+<script src="//a.amap.com/jsapi_demos/static/resource/heatmapData.js"></script>
 <script>
 
 // 信息窗体的内容
@@ -65,15 +67,8 @@ export default {
       route.search()
     })
 
-    var polyLine=new AMap.Polyline({
-      path:path,
-      strokeWeight:5,
-      borderWeight:5, //线条宽度
-      strokeStyle:"dashed",
-      strokeColor:"#428100", //线条颜色
-      lineJoin:"round" //折现拐点连接处样式
-    })
-    map.add(polyLine)
+
+
 
 
 // 将创建的点标记添加到已有的地图实例：

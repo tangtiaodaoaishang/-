@@ -1,18 +1,23 @@
 package com.example.controller;
 
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.Constants;
 import com.example.common.Result;
 import com.example.controller.dto.UserDTO;
+import com.example.mapper.UserMapper;
 import com.example.pojo.User;
 import com.example.service.IUserService;
 import com.example.service.impl.UserServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,24 +27,74 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 /*   @Autowired
     private UserMapper u;*/
     @Autowired
+    private StringRedisTemplate s;
+    @Autowired
     private UserServiceImpl u0;
     @Resource
     private IUserService u;
+    @Resource
+    private UserMapper u1;
 
+    private Constants c;
+
+
+    //查询已选老师课程的学生信息
+    @GetMapping("/findStudent/{role}")
+    public Result findStudent(@PathVariable String role){
+        QueryWrapper<User> q=new QueryWrapper<>();
+        q.eq("role",role);
+        return Result.success(u1.selectList(q));
+    }
+
+   //生成验证码
+    @PostMapping("/code/{phone}")
+    public Result setCode(@PathVariable("phone")String phone,@RequestBody UserDTO u){
+        String regex = "^1\\d{10}$";  //以1开头(^1),\\d表示任意数字,{10}表示前面的任意数字连续出现10次,$表示字符串结束
+        if(!phone.matches(regex)){
+            return Result.error("手机号格式错误");
+        }
+        String username=u.getUsername();
+
+        if(username==null){
+            return Result.error("用户名为空,请重新尝试");
+        }
+        if(username==""){
+            return Result.error("用户名再次为空,请重新尝试");
+        }
+        boolean isPhone = u0.findPhone(username,phone);
+        if(!isPhone){
+            return Result.error("手机号不符或者用户名错误,请重新尝试");
+        }
+           String key=c.REDIS_KEY1+":"+phone;
+           String code= RandomUtil.randomNumbers(8);
+           s.opsForValue().set(key,code,c.REDIS_TIME1,TimeUnit.SECONDS);
+        //发送验证码(这里实际操作很麻烦,所以直接用日志来记录发送成功)
+          log.info("发送验证码成功,验证码:{}",code);
+            return Result.success();
+    }
     //登录
-    @PostMapping("/login")
-    public Result login(@RequestBody UserDTO u){
+    @PostMapping("/login/{phone}")
+    public Result login(@PathVariable("phone") String phone,@RequestBody UserDTO u){
+        String key=c.REDIS_KEY1+":"+phone;
         String username = u.getUsername();
         String password = u.getPassword();
         if(StrUtil.isBlank(username)||StrUtil.isBlank(password)){
            return Result.error(Constants.CODE_400,"参数错误");
+        }
+
+        String cachecode=s.opsForValue().get(key);
+        String code=u.getCode();
+        if(code==null||!cachecode.equals(code)){
+            return Result.error("验证码错误");
         }
         UserDTO login = u0.login(u);
         return Result.success(login);
@@ -153,6 +208,9 @@ public class UserController {
         return m;
     }*/
 
+
+
+
    @GetMapping("front/page")
    public Result findAllPage(){
       return Result.success(u.list());
@@ -161,27 +219,9 @@ public class UserController {
     //@RequestParam(defaultValue = "")中使用到了默认值,即前端不传该注解定义的属性值也不会报404错,因为该属性又指定的默认值
     @GetMapping("page")
     public Result findPage(@RequestParam Integer pageNum, @RequestParam Integer pageSize, @RequestParam(defaultValue = "") String username,@RequestParam(defaultValue = "") String email,@RequestParam(defaultValue = "") String address){
-/*
-        IPage<User> userIPage=new Page<User>(pageNum,pageSize);
-        QueryWrapper<User> objectQueryWrapper = new QueryWrapper<>();
-        if(!"".equals(username)){
-            objectQueryWrapper.like("username",username);
-        }
-        if(!"".equals(email)){
-            objectQueryWrapper.like("email",email);
-        }
-        if(!"".equals(address)){
-            objectQueryWrapper.like("address",address);
-        }
-        objectQueryWrapper.orderByDesc("id");
 
-        IPage<User> page = u0.page(userIPage,objectQueryWrapper);
-
-        //在该请求里获取当前登录的用户信息
-        User u=TokenUtils.getCurrentUser();
-        System.out.println("当前登录的用户信息:"+u.getNickname());
-*/
 //        return Result.success(page);
-        return Result.success(u.findPage(new Page<>(pageNum,pageSize),username,email,address));
+        IPage<User> page = u.findPage(new Page<>(pageNum, pageSize), username, email, address);
+        return Result.success(page);
     }
 }

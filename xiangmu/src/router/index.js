@@ -94,6 +94,11 @@ const routes = [
         name:"FrontArticleDetail",
         component:() => import("../views/front/ArticleDetail")
       },
+      {
+        path:"dengji",
+        name:"FrontDengji",
+        component:() => import("../views/front/DengJi")
+      },
 
     ]
   },

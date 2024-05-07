@@ -119,7 +119,7 @@ export default {
   methods: {
     view(content){
         this.content=content
-      this.dialogView=true
+        this.dialogView=true
     },
     //markdown集成图片上传功能
     imgAdd(pos,$file){
